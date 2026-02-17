@@ -1,0 +1,91 @@
+﻿const menuToggle = document.querySelector('.menu-toggle');
+const navMenu = document.querySelector('.nav-menu');
+
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener('click', () => {
+    const isOpen = navMenu.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  navMenu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navMenu.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
+
+const revealItems = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.14 }
+);
+
+revealItems.forEach((item) => revealObserver.observe(item));
+
+const testimonialTrack = document.getElementById('testimonialTrack');
+const sliderDots = document.getElementById('sliderDots');
+
+if (testimonialTrack && sliderDots) {
+  const slides = Array.from(testimonialTrack.children);
+  let currentIndex = 0;
+
+  slides.forEach((_, idx) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('aria-label', `Go to testimonial ${idx + 1}`);
+    dot.addEventListener('click', () => goToSlide(idx));
+    sliderDots.appendChild(dot);
+  });
+
+  const dots = Array.from(sliderDots.children);
+
+  function goToSlide(index) {
+    currentIndex = index;
+    testimonialTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+    dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
+  }
+
+  function nextSlide() {
+    const nextIndex = (currentIndex + 1) % slides.length;
+    goToSlide(nextIndex);
+  }
+
+  goToSlide(0);
+  setInterval(nextSlide, 4300);
+}
+
+const yearEl = document.getElementById('year');
+if (yearEl) {
+  yearEl.textContent = String(new Date().getFullYear());
+}
+
+const inquiryForm = document.getElementById('inquiryForm');
+if (inquiryForm) {
+  inquiryForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(inquiryForm);
+
+    const name = String(formData.get('name') || '').trim();
+    const phone = String(formData.get('phone') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+
+    const lines = [
+      'Hello Rajasthan Marbles, I want to contact you.',
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      `Email: ${email}`
+    ].filter(Boolean);
+
+    const whatsappUrl = `https://wa.me/918808550246?text=${encodeURIComponent(lines.join('\n'))}`;
+    window.open(whatsappUrl, '_blank', 'noopener');
+    inquiryForm.reset();
+  });
+}
