@@ -19,6 +19,8 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -29,6 +31,8 @@ body {
     radial-gradient(circle at 100% 100%, #ece1d1 0%, rgba(236, 225, 209, 0) 42%),
     linear-gradient(160deg, #fdfaf4 0%, var(--bg) 54%, #efe3d2 100%);
   line-height: 1.7;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 img {
@@ -97,6 +101,7 @@ h2 {
   align-items: center;
   gap: 0.62rem;
   color: #fff;
+  min-width: 0;
 }
 
 .brand-mark {
@@ -111,12 +116,14 @@ h2 {
 .brand-text {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .brand-title {
   font-family: "Playfair Display", serif;
   font-size: 1.05rem;
   letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
 }
 
 .brand-sub {
@@ -124,6 +131,7 @@ h2 {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #eadcc7;
+  overflow-wrap: anywhere;
 }
 
 .nav-menu {
@@ -875,7 +883,7 @@ h2 {
 
 @media (max-width: 840px) {
   .nav-wrap {
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .menu-toggle {
