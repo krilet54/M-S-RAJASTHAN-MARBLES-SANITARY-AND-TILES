@@ -518,16 +518,30 @@ h2 {
   gap: 1rem;
 }
 
-.gallery-grid img {
+.gallery-item {
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--line);
   border-radius: 1.05rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.gallery-grid img {
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  box-shadow: var(--shadow);
   transition: transform 0.35s ease;
 }
 
-.gallery-grid img:hover {
+.gallery-item:hover img {
   transform: scale(1.02);
+}
+
+.gallery-item figcaption {
+  padding: 0.78rem 0.9rem 0.85rem;
+  font-size: 0.92rem;
+  color: #4a3d2e;
+  border-top: 1px solid var(--line);
 }
 
 .testimonials {
