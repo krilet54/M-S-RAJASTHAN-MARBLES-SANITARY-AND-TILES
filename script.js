@@ -89,3 +89,19 @@ if (inquiryForm) {
     inquiryForm.reset();
   });
 }
+
+const brandImages = document.querySelectorAll('.brand-logo img');
+brandImages.forEach((img) => {
+  const card = img.closest('.brand-logo');
+  if (!card) return;
+
+  const markFailed = () => card.classList.add('failed');
+
+  if (img.complete) {
+    if (img.naturalWidth === 0) {
+      markFailed();
+    }
+  } else {
+    img.addEventListener('error', markFailed, { once: true });
+  }
+});
