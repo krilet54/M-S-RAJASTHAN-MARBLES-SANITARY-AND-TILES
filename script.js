@@ -1,107 +1,120 @@
-﻿const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
+﻿const menuToggle = document.querySelector(".menu-toggle");
+const navMenu = document.querySelector(".nav-menu");
 
 if (menuToggle && navMenu) {
-  menuToggle.addEventListener('click', () => {
-    const isOpen = navMenu.classList.toggle('open');
-    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  menuToggle.addEventListener("click", () => {
+    const isOpen = navMenu.classList.toggle("open");
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
   });
 
-  navMenu.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      navMenu.classList.remove('open');
-      menuToggle.setAttribute('aria-expanded', 'false');
+  navMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      navMenu.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
     });
   });
 }
 
-const revealItems = document.querySelectorAll('.reveal');
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.14 }
-);
+const hero = document.querySelector("[data-hero-slides]");
+if (hero) {
+  const slidePaths = (hero.dataset.heroSlides || "")
+    .split("|")
+    .map((item) => item.trim())
+    .filter(Boolean);
 
-revealItems.forEach((item) => revealObserver.observe(item));
+  const layers = hero.querySelectorAll(".hero-slide");
+  const showLayer = (layer, path) => {
+    layer.style.backgroundImage = `url("${path}")`;
+  };
 
-const testimonialTrack = document.getElementById('testimonialTrack');
-const sliderDots = document.getElementById('sliderDots');
+  if (slidePaths.length > 0 && layers.length > 0) {
+    let activeLayer = 0;
+    let currentSlide = 0;
 
-if (testimonialTrack && sliderDots) {
-  const slides = Array.from(testimonialTrack.children);
-  let currentIndex = 0;
+    showLayer(layers[activeLayer], slidePaths[currentSlide]);
+    layers[activeLayer].classList.add("is-visible");
 
-  slides.forEach((_, idx) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.setAttribute('aria-label', `Go to testimonial ${idx + 1}`);
-    dot.addEventListener('click', () => goToSlide(idx));
-    sliderDots.appendChild(dot);
-  });
+    if (slidePaths.length > 1 && layers.length > 1) {
+      setInterval(() => {
+        const incomingLayer = activeLayer === 0 ? 1 : 0;
+        currentSlide = (currentSlide + 1) % slidePaths.length;
 
-  const dots = Array.from(sliderDots.children);
+        showLayer(layers[incomingLayer], slidePaths[currentSlide]);
+        layers[incomingLayer].classList.add("is-visible");
+        layers[activeLayer].classList.remove("is-visible");
 
-  function goToSlide(index) {
-    currentIndex = index;
-    testimonialTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
-    dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
+        activeLayer = incomingLayer;
+      }, 5000);
+    }
   }
-
-  function nextSlide() {
-    const nextIndex = (currentIndex + 1) % slides.length;
-    goToSlide(nextIndex);
-  }
-
-  goToSlide(0);
-  setInterval(nextSlide, 4300);
 }
 
-const yearEl = document.getElementById('year');
+const yearEl = document.getElementById("year");
 if (yearEl) {
   yearEl.textContent = String(new Date().getFullYear());
 }
 
-const inquiryForm = document.getElementById('inquiryForm');
-if (inquiryForm) {
-  inquiryForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(inquiryForm);
+const imageModal = document.querySelector("[data-image-modal]");
+const imageModalContent = imageModal
+  ? imageModal.querySelector("[data-image-modal-content]")
+  : null;
+const imageModalClose = imageModal
+  ? imageModal.querySelector("[data-image-modal-close]")
+  : null;
 
-    const name = String(formData.get('name') || '').trim();
-    const phone = String(formData.get('phone') || '').trim();
-    const email = String(formData.get('email') || '').trim();
+const openImageModal = (src, altText) => {
+  if (!imageModal || !imageModalContent || !src) return;
+  imageModalContent.setAttribute("src", src);
+  imageModalContent.setAttribute("alt", altText || "Expanded product image");
+  imageModal.classList.add("open");
+  imageModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+};
 
-    const lines = [
-      'Hello Rajasthan Marbles, I want to contact you.',
-      `Name: ${name}`,
-      `Phone: ${phone}`,
-      `Email: ${email}`
-    ].filter(Boolean);
+const closeImageModal = () => {
+  if (!imageModal || !imageModalContent) return;
+  imageModal.classList.remove("open");
+  imageModal.setAttribute("aria-hidden", "true");
+  imageModalContent.setAttribute("src", "");
+  document.body.classList.remove("modal-open");
+};
 
-    const whatsappUrl = `https://wa.me/918808550246?text=${encodeURIComponent(lines.join('\n'))}`;
-    window.open(whatsappUrl, '_blank', 'noopener');
-    inquiryForm.reset();
+if (imageModal) {
+  if (imageModalClose) {
+    imageModalClose.addEventListener("click", closeImageModal);
+  }
+
+  imageModal.addEventListener("click", (event) => {
+    if (event.target === imageModal) {
+      closeImageModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && imageModal.classList.contains("open")) {
+      closeImageModal();
+    }
   });
 }
 
-const brandImages = document.querySelectorAll('.brand-logo img');
-brandImages.forEach((img) => {
-  const card = img.closest('.brand-logo');
-  if (!card) return;
+const productCards = document.querySelectorAll(".product-card");
+productCards.forEach((card) => {
+  const mainImage = card.querySelector("[data-gallery-main]");
+  const thumbButtons = Array.from(card.querySelectorAll(".thumb-btn"));
+  if (!mainImage || thumbButtons.length === 0) return;
 
-  const markFailed = () => card.classList.add('failed');
+  mainImage.addEventListener("click", () => {
+    openImageModal(mainImage.getAttribute("src"), mainImage.getAttribute("alt"));
+  });
 
-  if (img.complete) {
-    if (img.naturalWidth === 0) {
-      markFailed();
-    }
-  } else {
-    img.addEventListener('error', markFailed, { once: true });
-  }
+  thumbButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const nextImage = btn.getAttribute("data-image");
+      if (!nextImage) return;
+      mainImage.setAttribute("src", nextImage);
+
+      thumbButtons.forEach((other) => other.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
 });
