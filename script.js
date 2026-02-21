@@ -97,6 +97,26 @@ if (imageModal) {
   });
 }
 
+// Hero parallax effect
+const heroMedia = document.querySelector(".hero-media");
+if (heroMedia) {
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const heroHeight = hero ? hero.offsetHeight : 600;
+        if (scrollY < heroHeight) {
+          const parallaxOffset = scrollY * 0.35;
+          heroMedia.style.transform = `translateY(${parallaxOffset}px) scale(1.08)`;
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+}
+
 const productCards = document.querySelectorAll(".product-card");
 productCards.forEach((card) => {
   const mainImage = card.querySelector("[data-gallery-main]");
