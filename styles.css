@@ -461,6 +461,18 @@ body {
 /* Make only the proprietor name bold */
 .hero-badge .hero-name {
   font-weight: 800;
+  color: #000000;
+}
+
+/* Force hero title and shimmering H1 to render as solid black */
+.hero .shimmer-title,
+.hero h1 {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #000000 !important;
+  color: #000000 !important;
+  text-shadow: none !important;
 }
 
 body.modal-open {
