@@ -606,8 +606,8 @@ body.modal-open {
 }
 
 .hero {
-  min-height: 38rem;
-  height: min(82vh, 44rem);
+  min-height: 33rem;
+  height: min(74vh, 39rem);
   background: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   position: relative;
@@ -682,7 +682,7 @@ body.modal-open {
 .hero-content {
   color: #2a1f15;
   max-width: 52rem;
-  padding: 3.5rem 0;
+  padding: 2.35rem 0;
   margin: 0 auto;
   text-align: center;
   display: flex;
